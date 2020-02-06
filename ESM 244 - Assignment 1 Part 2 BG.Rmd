@@ -1,5 +1,5 @@
 ---
-title: "ESM 244 Assignment 1 - Part 2"
+title: "ESM 244 Assignment 1 Part 2"
 author: "Bridget Gibbons"
 date: "2/2/2020"
 output: html_document
@@ -87,7 +87,7 @@ final_pca_plot <- autoplot(pca,
 final_pca_plot
 ```
 
-**Figure 2. Principal components analysis exploring the relationships between country-level environmental and climactic variables.** A subset of variables from the available climactic and environmental data was chosen to visualize the relationships between access to cities and the prevalence of agriculture, along with environmental and climatic factors that could influence a country's suitability for growing crops. Variables selected include: access to cities, elevation, cropland cover, temperature, rainfall, and cloudiness. Principal components 1 and 2 explain ~59% of overall variance in the data. Data source: @zander_venter.
+**Figure 1. Principal components analysis exploring the relationships between country-level environmental and climactic variables.** A subset of variables from the available climactic and environmental data was chosen to visualize the relationships between access to cities and the prevalence of agriculture, along with environmental and climatic factors that could influence a country's suitability for growing crops. Variables selected include: access to cities, elevation, cropland cover, temperature, rainfall, and cloudiness. Principal components 1 and 2 explain ~59% of overall variance in the data. Data source: @zander_venter.
 
 <br>
 
