@@ -1,0 +1,105 @@
+---
+title: "ESM 244 Assignment 1 - Part 2"
+author: "Bridget Gibbons"
+date: "2/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+```{r}
+# load the necessary packages
+
+library(tidyverse)
+library(kableExtra)
+library(janitor)
+library(lubridate)
+library(tidyr)
+library(ggfortify)
+library(RColorBrewer)
+
+```
+
+This projcet explores global climatactic and environmental factors and the relationship to the prevalence of agriculture and city access on the country level. The data used for this analysis is a subset of a larger dataset compiled and provided by @zander_venter on Kaggle. The data was aquired from Google Earth Engine (https://earthengine.google.com/) using publically available, remote sensing data, that had been uploaded for various countries. Most of the data is derived by calculating the mean for each country at a scale of about 10km. The variables chosen for inclusion in this analysis are access to cities, cropland cover, elevation, mean annual temperature, mean annual precipitation, and cloudiness. A principal components analysis is included below to demonstrate directionality of the greatest source of variance within the selected variables. 
+
+<br>
+
+
+```{r, results = FALSE}
+# explore data
+env <- read_csv("world_env_vars.csv") %>% 
+  clean_names() # update the column names
+
+summary(env) # look at the data
+```
+
+
+```{r, results = FALSE}
+# retain variables of interest for my pca analysis
+
+env_pca_data <- env %>% 
+  select(accessibility_to_cities, elevation, cropland_cover,  rain_mean_annual, temp_mean_annual, cloudiness) 
+
+# explore subset data and understand missingness
+
+#VIM::matrixplot(env_pca_data)
+
+#naniar::gg_miss_var(env_pca_data)
+
+# there aren't too many NA values, ok to remove them from the dataset
+
+env_nona <- env_pca_data %>% 
+  drop_na() %>%  # remove NA values
+  rename("City Access" = accessibility_to_cities, 
+         "Elevation" = elevation,
+         "Crop Cover" = cropland_cover,
+         "Annual Mean Rainfall" = rain_mean_annual,
+         "Annual Mean Temperature" = temp_mean_annual,
+         "Cloudiness" = cloudiness) # rename the variables so the plot will make more sense
+
+pca <- prcomp(env_nona, scale = TRUE) # run the PCA
+
+
+#biplot(pca) # view initial biplot, looks terrible
+```
+
+
+
+```{r}
+# finalize the PCA biplot
+
+final_pca_plot <- autoplot(pca,
+                        colour = "black",
+                        alpha = 0.15,
+                        loadings.colour = "darkgrey",
+                        loadings.label = TRUE,
+                        loadings.label.size = 3,
+                        loadings.label.colour = "darkgreen",
+                        loadings.label.repel = TRUE,
+                        loadings.label.vjust = 2,
+                        loadings.label.hjust = 0.5)+
+  theme_minimal()
+
+final_pca_plot
+```
+
+**Figure 2. Principal components analysis exploring the relationships between country-level environmental and climactic variables.** A subset of variables from the available climactic and environmental data was chosen to visualize the relationships between access to cities and the prevalence of agriculture, along with environmental and climatic factors that could influence a country's suitability for growing crops. Variables selected include: access to cities, elevation, cropland cover, temperature, rainfall, and cloudiness. Principal components 1 and 2 explain ~59% of overall variance in the data. Data source: @zander_venter.
+
+<br>
+
+* Summary of principal components analysis for country-level environmental and climatic variables:
+    + Crop Cover and Elevation are positively correlated
+    + Annual Mean Rainfall and City Access are positively correlated
+    + Annual Mean Temperature is negatively correlated with Crop Cover and Elevation
+    + Cloudiness is not related to Annual Mean Temperature, Crop Cover, or Elevation
+    + Principal components 1 and 2 explain ~59% of variance in the data
+
+<br>
+
+Reference: 
+<br>
+@zander_venter on Kaggle, data from Google Earth Engine (https://earthengine.google.com/). 
